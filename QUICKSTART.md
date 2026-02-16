@@ -156,4 +156,3 @@ lsof -ti:5173 | xargs kill -9
 - 📖 [README.md](./README.md) - Полное описание
 - 📦 [INSTALLATION.md](./INSTALLATION.md) - Подробная установка
 - 📊 [FEATURES_STATUS.md](./FEATURES_STATUS.md) - Статус функций
-

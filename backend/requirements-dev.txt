@@ -1,0 +1,19 @@
+# Минимальные зависимости для локальной разработки
+# Используйте: pip install -r requirements-dev.txt
+
+# Flask и основные расширения
+Flask==3.0.0
+Flask-CORS==4.0.0
+Flask-SQLAlchemy==3.1.1
+Flask-Migrate==4.0.5
+
+# Конфигурация и утилиты
+python-dotenv==1.0.0
+requests==2.31.0
+
+# Для production используйте: pip install -r requirements.txt
+# requirements.txt содержит дополнительные зависимости:
+# - psycopg2-binary (PostgreSQL)
+# - redis, celery (фоновые задачи)
+# - gunicorn, gevent (production сервер)
+# - pytonlib, tonsdk, bitcoin (блокчейн библиотеки)
