@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECOS Cloud Mining Marketplace - Live Trading Floor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0a0e27;
+            color: #fff;
+            overflow-x: hidden;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Light Theme */
+        body.light-theme {
+            background: #f5f7fa;
+            color: #1a1f3a;
+        }
+
+        body.light-theme .top-bar {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f2f5 100%);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        body.light-theme .ticker-tape {
+            background: #ffffff;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        body.light-theme .ticker-item {
+            color: #5a6b8c;
+        }
+
+        body.light-theme .left-sidebar,
+        body.light-theme .right-sidebar {
+            background: #ffffff;
+            border-color: rgba(0,0,0,0.1);
+        }
+
+        body.light-theme .center-content {
+            background: #f5f7fa;
+        }
+
+        body.light-theme .quick-filter-btn {
+            background: #f0f2f5;
+            border-color: rgba(0,0,0,0.1);
+            color: #1a1f3a;
+        }
+
+        body.light-theme .quick-filter-btn:hover {
+            background: #e6e9ed;
+            border-color: #00d4ff;
+        }
+
+        body.light-theme .quick-filter-btn.active {
+            background: linear-gradient(135deg, rgba(0,212,255,0.15) 0%, rgba(0,153,255,0.15) 100%);
+            border-color: #00d4ff;
+        }
+
+        body.light-theme .filter-badge {
+            background: rgba(0,0,0,0.1);
+        }
+
+        body.light-theme .stat-label,
+        body.light-theme .checkbox-item,
+        body.light-theme .range-values,
+        body.light-theme .filter-title {
+            color: #5a6b8c;
+        }
+
+        body.light-theme .stat-value {
+            color: #1a1f3a;
+        }
+
+        body.light-theme .contract-card {
+            background: #ffffff;
+            border-color: rgba(0,0,0,0.1);
+        }
+
+        body.light-theme .contract-card:hover {
+            border-color: #00d4ff;
+            box-shadow: 0 8px 32px rgba(0,212,255,0.2);
+        }
+
+        body.light-theme .contract-id,
+        body.light-theme .original-price,
+        body.light-theme .stat-box-label,
+        body.light-theme .card-metrics {
+            color: #5a6b8c;
+        }
+
+        body.light-theme .view-btn,
+        body.light-theme .sort-dropdown,
+        body.light-theme .watchlist-btn {
+            background: #f0f2f5;
+            border-color: rgba(0,0,0,0.1);
+            color: #1a1f3a;
+        }
+
+        body.light-theme .view-btn:hover,
+        body.light-theme .watchlist-btn:hover {
+            background: #e6e9ed;
+        }
+
+        body.light-theme .view-btn.active {
+            background: #00d4ff;
+            color: #ffffff;
+        }
+
+        body.light-theme .activity-item {
+            background: #f0f2f5;
+            border-color: rgba(0,0,0,0.1);
+        }
+
+        body.light-theme .activity-time {
+            color: #5a6b8c;
+        }
+
+        body.light-theme .activity-content {
+            color: #1a1f3a;
+        }
+
+        body.light-theme .modal {
+            background: rgba(0,0,0,0.6);
+        }
+
+        body.light-theme .modal-content {
+            background: #ffffff;
+            border-color: rgba(0,0,0,0.1);
+        }
+
+        body.light-theme .modal-close {
+            background: #f0f2f5;
+            color: #1a1f3a;
+        }
+
+        body.light-theme .modal-close:hover {
+            background: #e6e9ed;
+        }
+
+        body.light-theme .modal-title {
+            color: #1a1f3a;
+        }
+
+        body.light-theme .confirm-label {
+            color: #5a6b8c;
+        }
+
+        body.light-theme .confirm-value {
+            color: #1a1f3a;
+        }
+
+        body.light-theme .table-view {
+            background: #ffffff;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        body.light-theme .table-header,
+        body.light-theme .table-row {
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        body.light-theme .table-row:hover {
+            background: #f0f2f5;
+        }
+
+        body.light-theme ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+
+        body.light-theme ::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.2);
+        }
+
+        body.light-theme ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0,0,0,0.3);
+        }
+
+        /* Header & Top Stats */
+        .top-bar {
+            background: linear-gradient(135deg, #1a1f3a 0%, #0f1425 100%);
+            padding: 12px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        body.light-theme .logo {
+            background: linear-gradient(135deg, #0099ff 0%, #006acc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #ff3366;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .top-stats {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #8891aa;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .stat-value.positive {
+            color: #00ff88;
+        }
+
+        .stat-value.negative {
+            color: #ff3366;
+        }
+
+        /* Ticker Tape */
+        .ticker-tape {
+            background: #1a1f3a;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden;
+            padding: 10px 0;
+        }
+
+        .ticker-content {
+            display: flex;
+            gap: 40px;
+            animation: scroll 60s linear infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-item {
+            font-size: 13px;
+            color: #8891aa;
+        }
+
+        .ticker-item .highlight {
+            color: #00ff88;
+            font-weight: 600;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            gap: 0;
+            height: calc(100vh - 140px);
+        }
+
+        /* Left Sidebar - Filters */
+        .left-sidebar {
+            background: #0f1425;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .quick-filters {
+            margin-bottom: 30px;
+        }
+
+        .filter-title {
+            font-size: 12px;
+            color: #8891aa;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .quick-filter-btn {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .quick-filter-btn:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: #00d4ff;
+        }
+
+        .quick-filter-btn.active {
+            background: linear-gradient(135deg, rgba(0,212,255,0.2) 0%, rgba(0,153,255,0.2) 100%);
+            border-color: #00d4ff;
+        }
+
+        .filter-badge {
+            background: rgba(255,255,255,0.15);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .filter-section {
+            margin-bottom: 25px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .range-slider {
+            margin-top: 10px;
+        }
+
+        .range-slider input {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.1);
+            outline: none;
+        }
+
+        .range-values {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 12px;
+            color: #8891aa;
+        }
+
+        /* Center - Contract Listings */
+        .center-content {
+            background: #0a0e27;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .view-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 10px;
+        }
+
+        .view-btn {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            color: #8891aa;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .view-btn.active {
+            background: #00d4ff;
+            color: #0a0e27;
+            border-color: #00d4ff;
+        }
+
+        .sort-dropdown {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* Contract Cards */
+        .contracts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .contract-card {
+            background: linear-gradient(135deg, #1a1f3a 0%, #0f1425 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contract-card:hover {
+            transform: translateY(-4px);
+            border-color: #00d4ff;
+            box-shadow: 0 8px 32px rgba(0,212,255,0.2);
+        }
+
+        .contract-card.hot-deal {
+            border-color: #ff3366;
+            animation: glow 2s infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,51,102,0.3); }
+            50% { box-shadow: 0 0 40px rgba(255,51,102,0.5); }
+        }
+
+        .card-badges {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge.hot {
+            background: linear-gradient(135deg, #ff3366 0%, #ff6b9d 100%);
+        }
+
+        .badge.premium {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #0a0e27;
+        }
+
+        .badge.new {
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+            color: #0a0e27;
+        }
+
+        .badge.trending {
+            background: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
+        }
+
+        .card-header {
+            margin-bottom: 15px;
+        }
+
+        .contract-id {
+            font-size: 12px;
+            color: #8891aa;
+            margin-bottom: 5px;
+        }
+
+        .hashrate {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+            padding: 15px 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .stat-box {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-box-label {
+            font-size: 11px;
+            color: #8891aa;
+        }
+
+        .stat-box-value {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .price-section {
+            margin: 15px 0;
+        }
+
+        .original-price {
+            font-size: 13px;
+            color: #8891aa;
+            text-decoration: line-through;
+            margin-bottom: 5px;
+        }
+
+        .current-price {
+            font-size: 32px;
+            font-weight: 700;
+            color: #00ff88;
+            margin-bottom: 5px;
+        }
+
+        .discount {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ff3366;
+        }
+
+        .roi-highlight {
+            background: rgba(0,255,136,0.1);
+            border: 1px solid rgba(0,255,136,0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .roi-label {
+            font-size: 11px;
+            color: #8891aa;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .roi-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #00ff88;
+        }
+
+        .card-metrics {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            font-size: 12px;
+            color: #8891aa;
+        }
+
+        .buy-button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+            border: none;
+            border-radius: 8px;
+            color: #0a0e27;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .buy-button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(0,255,136,0.3);
+        }
+
+        .buy-button.pulsing {
+            animation: pulse-button 1.5s infinite;
+        }
+
+        @keyframes pulse-button {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .watchlist-btn {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            color: #8891aa;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .watchlist-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+
+        /* Right Sidebar - Live Activity */
+        .right-sidebar {
+            background: #0f1425;
+            border-left: 1px solid rgba(255,255,255,0.1);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .activity-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .activity-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .activity-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .activity-item {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 12px;
+            animation: slideIn 0.5s;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .activity-time {
+            font-size: 11px;
+            color: #8891aa;
+            margin-bottom: 6px;
+        }
+
+        .activity-content {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .activity-type {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-right: 6px;
+        }
+
+        .activity-type.sale {
+            background: rgba(0,255,136,0.2);
+            color: #00ff88;
+        }
+
+        .activity-type.listing {
+            background: rgba(0,212,255,0.2);
+            color: #00d4ff;
+        }
+
+        .activity-type.price-drop {
+            background: rgba(255,51,102,0.2);
+            color: #ff3366;
+        }
+
+        .online-users {
+            background: rgba(0,255,136,0.1);
+            border: 1px solid rgba(0,255,136,0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .online-count {
+            font-size: 32px;
+            font-weight: 700;
+            color: #00ff88;
+            margin-bottom: 5px;
+        }
+
+        .online-label {
+            font-size: 12px;
+            color: #8891aa;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1f3a 0%, #0f1425 100%);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .modal-header {
+            margin-bottom: 30px;
+        }
+
+        .modal-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .confirmation-section {
+            background: rgba(0,255,136,0.1);
+            border: 1px solid rgba(0,255,136,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .confirm-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .confirm-item:last-child {
+            border-bottom: none;
+        }
+
+        .confirm-label {
+            color: #8891aa;
+        }
+
+        .confirm-value {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .modal-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .modal-btn {
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .modal-btn.primary {
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+            color: #0a0e27;
+        }
+
+        .modal-btn.secondary {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .modal-btn:hover {
+            transform: scale(1.02);
+        }
+
+        /* Success Animation */
+        @keyframes confetti {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #00ff88;
+            animation: confetti 3s linear;
+            z-index: 9999;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+
+            .left-sidebar, .right-sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .contracts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .top-stats {
+                display: none;
+            }
+
+            .table-view {
+                overflow-x: auto;
+            }
+        }
+
+        /* Table View */
+        .table-view {
+            background: linear-gradient(135deg, #1a1f3a 0%, #0f1425 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 140px 120px 120px 140px 120px 120px 140px 1fr;
+            padding: 15px 20px;
+            background: rgba(0,212,255,0.1);
+            border-bottom: 2px solid rgba(0,212,255,0.3);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #8891aa;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 140px 120px 120px 140px 120px 120px 140px 1fr;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+            align-items: center;
+        }
+
+        .table-row:hover {
+            background: rgba(0,212,255,0.05);
+        }
+
+        .table-row.hot-row {
+            background: rgba(255,51,102,0.05);
+            border-left: 3px solid #ff3366;
+        }
+
+        .table-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .table-cell-label {
+            font-size: 11px;
+            color: #8891aa;
+        }
+
+        .table-cell-value {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .table-cell-value.large {
+            font-size: 20px;
+        }
+
+        .table-badges {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .table-badge {
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .table-badge.hot {
+            background: #ff3366;
+            color: #fff;
+        }
+
+        .table-badge.premium {
+            background: #ffd700;
+            color: #0a0e27;
+        }
+
+        .table-badge.new {
+            background: #00ff88;
+            color: #0a0e27;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .table-btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            text-transform: uppercase;
+        }
+
+        .table-btn.buy {
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+            color: #0a0e27;
+        }
+
+        .table-btn.buy:hover {
+            transform: scale(1.05);
+        }
+
+        .table-btn.details {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .table-btn.details:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .theme-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .theme-icon.active {
+            background: #00d4ff;
+            color: #0a0e27;
+        }
+
+        body.light-theme .theme-toggle {
+            background: rgba(0,0,0,0.05);
+            border-color: rgba(0,0,0,0.1);
+        }
+
+        body.light-theme .theme-toggle:hover {
+            background: rgba(0,0,0,0.1);
+        }
+
+        body.light-theme .theme-icon.active {
+            background: #00d4ff;
+            color: #ffffff;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="logo">ECOS Marketplace</div>
+        
+        <div class="live-indicator">
+            <div class="live-dot"></div>
+            <span>LIVE</span>
+        </div>
+
+        <div class="top-stats">
+            <div class="stat-item">
+                <div class="stat-label">Market Volume</div>
+                <div class="stat-value">$847,392</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">24h Deals</div>
+                <div class="stat-value positive">127 ↑</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Avg Discount</div>
+                <div class="stat-value negative">-18.3%</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Active Listings</div>
+                <div class="stat-value">342</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Best Deal</div>
+                <div class="stat-value">-34% 🔥</div>
+            </div>
+        </div>
+
+        <div class="theme-toggle" onclick="toggleTheme()">
+            <div class="theme-icon active" id="darkIcon">🌙</div>
+            <div class="theme-icon" id="lightIcon">☀️</div>
+        </div>
+    </div>
+
+    <!-- Ticker Tape -->
+    <div class="ticker-tape">
+        <div class="ticker-content" id="tickerContent">
+            <!-- Generated dynamically -->
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Left Sidebar - Filters -->
+        <div class="left-sidebar">
+            <div class="quick-filters">
+                <div class="filter-title">⚡ Quick Filters</div>
+                <button class="quick-filter-btn" onclick="applyFilter('hot')">
+                    <span>🔥 Hot Deals (>25%)</span>
+                    <span class="filter-badge">89</span>
+                </button>
+                <button class="quick-filter-btn" onclick="applyFilter('premium')">
+                    <span>💎 Premium (>100 TH/s)</span>
+                    <span class="filter-badge">45</span>
+                </button>
+                <button class="quick-filter-btn" onclick="applyFilter('ending')">
+                    <span>⏰ Ending Soon (<30d)</span>
+                    <span class="filter-badge">23</span>
+                </button>
+                <button class="quick-filter-btn active" onclick="applyFilter('new')">
+                    <span>🆕 Just Listed (<1h)</span>
+                    <span class="filter-badge">12</span>
+                </button>
+                <button class="quick-filter-btn" onclick="applyFilter('roi')">
+                    <span>💰 Best ROI (>30%)</span>
+                    <span class="filter-badge">67</span>
+                </button>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-title">💰 Discount</div>
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox">
+                        <span>0-10% <span style="color: #8891aa">(132)</span></span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" checked>
+                        <span>10-20% <span style="color: #8891aa">(156)</span></span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" checked>
+                        <span>20-30% <span style="color: #8891aa">(89)</span></span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" checked>
+                        <span>30%+ <span style="color: #8891aa">(12)</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-title">⏱ Time Remaining</div>
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox">
+                        <span>< 3 months <span style="color: #8891aa">(45)</span></span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" checked>
+                        <span>3-6 months <span style="color: #8891aa">(123)</span></span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" checked>
+                        <span>6-12 months <span style="color: #8891aa">(98)</span></span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox">
+                        <span>12+ months <span style="color: #8891aa">(76)</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-title">⚡ Hashrate</div>
+                <div class="range-slider">
+                    <input type="range" min="0" max="500" value="250">
+                    <div class="range-values">
+                        <span>0 TH/s</span>
+                        <span>500 TH/s</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-title">⭐ Seller Rating</div>
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox">
+                        <span>★★★★★ only</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" checked>
+                        <span>★★★★☆ and up</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center - Contract Listings -->
+        <div class="center-content">
+            <div class="view-controls">
+                <div class="view-toggle">
+                    <button class="view-btn active" id="cardsViewBtn" onclick="switchView('cards')">🔲 Cards</button>
+                    <button class="view-btn" id="tableViewBtn" onclick="switchView('table')">📊 Table</button>
+                </div>
+                <select class="sort-dropdown" onchange="sortContracts(this.value)">
+                    <option value="discount">Sort: Best Discount</option>
+                    <option value="roi">Sort: Highest ROI</option>
+                    <option value="ending">Sort: Ending Soon</option>
+                    <option value="new">Sort: Just Added</option>
+                    <option value="price-low">Sort: Price Low-High</option>
+                    <option value="price-high">Sort: Price High-Low</option>
+                </select>
+            </div>
+
+            <div class="contracts-grid" id="contractsGrid">
+                <!-- Generated dynamically -->
+            </div>
+
+            <div class="table-view hidden" id="tableView">
+                <!-- Generated dynamically -->
+            </div>
+        </div>
+
+        <!-- Right Sidebar - Activity Feed -->
+        <div class="right-sidebar">
+            <div class="online-users">
+                <div class="online-count" id="onlineCount">89</div>
+                <div class="online-label">Buyers Online Now</div>
+            </div>
+
+            <div class="activity-header">
+                <div class="live-dot"></div>
+                <h3>Live Activity</h3>
+            </div>
+
+            <div class="activity-feed" id="activityFeed">
+                <!-- Generated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Purchase Modal -->
+    <div class="modal" id="purchaseModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            
+            <div class="modal-header">
+                <div class="modal-title">Confirm Purchase</div>
+                <div style="color: #8891aa; font-size: 14px;">Contract will activate immediately</div>
+            </div>
+
+            <div class="confirmation-section" id="confirmationDetails">
+                <!-- Generated dynamically -->
+            </div>
+
+            <div style="background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.3); border-radius: 8px; padding: 15px; margin: 20px 0;">
+                <div style="font-size: 12px; color: #8891aa; margin-bottom: 5px;">✓ ECOS Protection Guarantee</div>
+                <div style="font-size: 13px;">Instant contract transfer • Money-back guarantee • 24/7 support</div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="modal-btn secondary" onclick="closeModal()">Cancel</button>
+                <button class="modal-btn primary" onclick="completePurchase()">Confirm Purchase</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample contract data
+        const contracts = [
+            {
+                id: 'CM-89432',
+                hashrate: 150,
+                daysLeft: 287,
+                originalPrice: 4750,
+                price: 3240,
+                discount: 32,
+                roi: 38.2,
+                dailyIncome: 0.00031,
+                views: 234,
+                watchlist: 12,
+                badges: ['hot', 'premium'],
+                seller: { rating: 4.9, deals: 156 }
+            },
+            {
+                id: 'CM-89431',
+                hashrate: 200,
+                daysLeft: 156,
+                originalPrice: 4020,
+                price: 2890,
+                discount: 28,
+                roi: 34.1,
+                dailyIncome: 0.00041,
+                views: 189,
+                watchlist: 8,
+                badges: ['premium', 'trending'],
+                seller: { rating: 5.0, deals: 234 }
+            },
+            {
+                id: 'CM-89428',
+                hashrate: 75,
+                daysLeft: 412,
+                originalPrice: 2170,
+                price: 1650,
+                discount: 24,
+                roi: 31.5,
+                dailyIncome: 0.00015,
+                views: 312,
+                watchlist: 15,
+                badges: ['new'],
+                seller: { rating: 4.8, deals: 89 }
+            },
+            {
+                id: 'CM-89427',
+                hashrate: 100,
+                daysLeft: 198,
+                originalPrice: 2700,
+                price: 2100,
+                discount: 22,
+                roi: 29.8,
+                dailyIncome: 0.00021,
+                views: 156,
+                watchlist: 6,
+                badges: ['trending'],
+                seller: { rating: 4.7, deals: 67 }
+            },
+            {
+                id: 'CM-89423',
+                hashrate: 50,
+                daysLeft: 334,
+                originalPrice: 1580,
+                price: 1280,
+                discount: 19,
+                roi: 27.3,
+                dailyIncome: 0.00010,
+                views: 98,
+                watchlist: 4,
+                badges: [],
+                seller: { rating: 4.9, deals: 123 }
+            },
+            {
+                id: 'CM-89419',
+                hashrate: 125,
+                daysLeft: 245,
+                originalPrice: 3350,
+                price: 2750,
+                discount: 18,
+                roi: 26.1,
+                dailyIncome: 0.00026,
+                views: 167,
+                watchlist: 9,
+                badges: ['premium'],
+                seller: { rating: 4.8, deals: 178 }
+            }
+        ];
+
+        // Activity feed data
+        const activities = [
+            { type: 'sale', time: '2 sec ago', text: 'User ***2847 bought 100 TH/s for $2,100', highlight: 'Saved 24%' },
+            { type: 'sale', time: '15 sec ago', text: 'User ***1923 bought 50 TH/s for $1,050', highlight: 'Saved 31% 🔥' },
+            { type: 'listing', time: '1 min ago', text: 'New listing: 200 TH/s', highlight: 'Price: $3,890 (-22%)' },
+            { type: 'sale', time: '2 min ago', text: 'User ***4521 bought 150 TH/s for $3,100', highlight: 'Saved 27% 💎' },
+            { type: 'price-drop', time: '3 min ago', text: '#CM-89234 price drop', highlight: '$2,800 → $2,600' },
+            { type: 'sale', time: '4 min ago', text: 'User ***7834 bought 75 TH/s for $1,480', highlight: 'Saved 19%' }
+        ];
+
+        // Initialize ticker
+        function initTicker() {
+            const tickerContent = document.getElementById('tickerContent');
+            const items = [
+                '🔥 12 contracts sold in last hour',
+                '💎 Best deal: 150 TH/s at -34%',
+                '⚡ New: 200 TH/s just listed',
+                '👥 89 buyers online now',
+                '💰 Total savings today: $45,230',
+                '🏆 Top seller: User ***4521 (5.0★)',
+                '📈 Market volume up 23% this week',
+                '⏰ 23 contracts ending in <30 days'
+            ];
+            
+            const tickerHTML = items.concat(items).map(item => 
+                `<span class="ticker-item">${item}</span>`
+            ).join('');
+            
+            tickerContent.innerHTML = tickerHTML;
+        }
+
+        // Render contracts
+        function renderContracts() {
+            const grid = document.getElementById('contractsGrid');
+            grid.innerHTML = contracts.map(contract => {
+                const badgesHTML = contract.badges.map(badge => {
+                    const icons = { hot: '🔥', premium: '💎', new: '🆕', trending: '👀' };
+                    const labels = { hot: 'FIRE SALE', premium: 'PREMIUM', new: 'FRESH', trending: 'TRENDING' };
+                    return `<span class="badge ${badge}">${icons[badge]} ${labels[badge]}</span>`;
+                }).join('');
+
+                const isHot = contract.badges.includes('hot');
+                const pulsingClass = isHot ? 'pulsing' : '';
+
+                return `
+                    <div class="contract-card ${isHot ? 'hot-deal' : ''}" onclick="openPurchaseModal('${contract.id}')">
+                        <div class="card-badges">
+                            ${badgesHTML}
+                        </div>
+                        
+                        <div class="card-header">
+                            <div class="contract-id">Contract #${contract.id}</div>
+                            <div class="hashrate">${contract.hashrate} TH/s</div>
+                        </div>
+
+                        <div class="card-stats">
+                            <div class="stat-box">
+                                <div class="stat-box-label">⏱ Days Left</div>
+                                <div class="stat-box-value">${contract.daysLeft}d</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-box-label">₿ Daily Income</div>
+                                <div class="stat-box-value">${contract.dailyIncome}</div>
+                            </div>
+                        </div>
+
+                        <div class="price-section">
+                            <div class="original-price">Was: $${contract.originalPrice.toLocaleString()}</div>
+                            <div class="current-price">$${contract.price.toLocaleString()}</div>
+                            <div class="discount">YOU SAVE: -${contract.discount}% 💰</div>
+                        </div>
+
+                        <div class="roi-highlight">
+                            <div class="roi-label">Expected ROI</div>
+                            <div class="roi-value">${contract.roi}%</div>
+                        </div>
+
+                        <div class="card-metrics">
+                            <span>👁 ${contract.views} views</span>
+                            <span>♡ ${contract.watchlist} watchlist</span>
+                            <span>⭐ ${contract.seller.rating}/5</span>
+                        </div>
+
+                        <button class="buy-button ${pulsingClass}" onclick="event.stopPropagation(); openPurchaseModal('${contract.id}')">
+                            BUY NOW - $${contract.price.toLocaleString()}
+                        </button>
+
+                        <button class="watchlist-btn" onclick="event.stopPropagation(); addToWatchlist('${contract.id}')">
+                            ♡ Add to Watchlist
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Render table view
+        function renderTableView() {
+            const table = document.getElementById('tableView');
+            
+            const tableHeader = `
+                <div class="table-header">
+                    <div>Contract</div>
+                    <div>Hashrate</div>
+                    <div>Days Left</div>
+                    <div>Price</div>
+                    <div>Discount</div>
+                    <div>ROI</div>
+                    <div>Status</div>
+                    <div>Actions</div>
+                </div>
+            `;
+
+            const tableRows = contracts.map(contract => {
+                const isHot = contract.badges.includes('hot');
+                
+                const badgesHTML = contract.badges.map(badge => {
+                    const labels = { hot: '🔥', premium: '💎', new: '🆕', trending: '👀' };
+                    return `<span class="table-badge ${badge}">${labels[badge]}</span>`;
+                }).join('');
+
+                return `
+                    <div class="table-row ${isHot ? 'hot-row' : ''}" onclick="openPurchaseModal('${contract.id}')">
+                        <div class="table-cell">
+                            <div class="table-cell-label">ID</div>
+                            <div class="table-cell-value">#${contract.id}</div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="table-cell-value large" style="background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">${contract.hashrate} TH/s</div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="table-cell-value">${contract.daysLeft}d</div>
+                            <div class="table-cell-label">${(contract.daysLeft / 30).toFixed(1)} months</div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="table-cell-value" style="color: #00ff88;">$${contract.price.toLocaleString()}</div>
+                            <div class="table-cell-label" style="text-decoration: line-through;">$${contract.originalPrice.toLocaleString()}</div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="table-cell-value" style="color: #ff3366;">-${contract.discount}%</div>
+                            <div class="table-cell-label">Save $${(contract.originalPrice - contract.price).toLocaleString()}</div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="table-cell-value" style="color: #00ff88;">${contract.roi}%</div>
+                            <div class="table-cell-label">annual</div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="table-badges">${badgesHTML}</div>
+                            <div class="table-cell-label">👁 ${contract.views} • ⭐ ${contract.seller.rating}/5</div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="table-actions">
+                                <button class="table-btn buy" onclick="event.stopPropagation(); openPurchaseModal('${contract.id}')">BUY</button>
+                                <button class="table-btn details" onclick="event.stopPropagation(); alert('Details for #${contract.id}')">Details</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            table.innerHTML = tableHeader + tableRows;
+        }
+
+        // Switch between card and table view
+        function switchView(view) {
+            const cardsGrid = document.getElementById('contractsGrid');
+            const tableView = document.getElementById('tableView');
+            const cardsBtn = document.getElementById('cardsViewBtn');
+            const tableBtn = document.getElementById('tableViewBtn');
+
+            if (view === 'cards') {
+                cardsGrid.classList.remove('hidden');
+                tableView.classList.add('hidden');
+                cardsBtn.classList.add('active');
+                tableBtn.classList.remove('active');
+            } else {
+                cardsGrid.classList.add('hidden');
+                tableView.classList.remove('hidden');
+                cardsBtn.classList.remove('active');
+                tableBtn.classList.add('active');
+                renderTableView();
+            }
+        }
+
+        // Sort contracts
+        function sortContracts(sortBy) {
+            const sortFunctions = {
+                'discount': (a, b) => b.discount - a.discount,
+                'roi': (a, b) => b.roi - a.roi,
+                'ending': (a, b) => a.daysLeft - b.daysLeft,
+                'new': (a, b) => b.views - a.views, // Assuming newer = less views
+                'price-low': (a, b) => a.price - b.price,
+                'price-high': (a, b) => b.price - a.price
+            };
+
+            if (sortFunctions[sortBy]) {
+                contracts.sort(sortFunctions[sortBy]);
+                renderContracts();
+                
+                // Re-render table if it's active
+                const tableView = document.getElementById('tableView');
+                if (!tableView.classList.contains('hidden')) {
+                    renderTableView();
+                }
+            }
+        }
+
+        // Toggle theme
+        function toggleTheme() {
+            const body = document.body;
+            const darkIcon = document.getElementById('darkIcon');
+            const lightIcon = document.getElementById('lightIcon');
+            
+            body.classList.toggle('light-theme');
+            
+            if (body.classList.contains('light-theme')) {
+                darkIcon.classList.remove('active');
+                lightIcon.classList.add('active');
+                localStorage.setItem('theme', 'light');
+            } else {
+                darkIcon.classList.add('active');
+                lightIcon.classList.remove('active');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-theme');
+                document.getElementById('darkIcon').classList.remove('active');
+                document.getElementById('lightIcon').classList.add('active');
+            }
+        }
+
+        // Render activity feed
+        function renderActivity() {
+            const feed = document.getElementById('activityFeed');
+            feed.innerHTML = activities.map(activity => `
+                <div class="activity-item">
+                    <div class="activity-time">${activity.time}</div>
+                    <div class="activity-content">
+                        <span class="activity-type ${activity.type}">${activity.type === 'sale' ? '✓ SOLD' : activity.type === 'listing' ? '📝 NEW' : '🔥 ALERT'}</span>
+                        ${activity.text}<br>
+                        <strong style="color: #00ff88">${activity.highlight}</strong>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Add new activity periodically
+        function addLiveActivity() {
+            const feed = document.getElementById('activityFeed');
+            const randomActivities = [
+                { type: 'sale', text: `User ***${Math.floor(Math.random() * 9000) + 1000} bought ${[50, 75, 100, 150][Math.floor(Math.random() * 4)]} TH/s`, highlight: `Saved ${Math.floor(Math.random() * 20) + 15}%` },
+                { type: 'listing', text: `New listing: ${[75, 100, 125, 150, 200][Math.floor(Math.random() * 5)]} TH/s`, highlight: `Price: $${Math.floor(Math.random() * 3000) + 1500} (-${Math.floor(Math.random() * 15) + 15}%)` }
+            ];
+
+            const activity = randomActivities[Math.floor(Math.random() * randomActivities.length)];
+            const newItem = `
+                <div class="activity-item">
+                    <div class="activity-time">just now</div>
+                    <div class="activity-content">
+                        <span class="activity-type ${activity.type}">${activity.type === 'sale' ? '✓ SOLD' : '📝 NEW'}</span>
+                        ${activity.text}<br>
+                        <strong style="color: #00ff88">${activity.highlight}</strong>
+                    </div>
+                </div>
+            `;
+
+            feed.insertAdjacentHTML('afterbegin', newItem);
+
+            // Remove oldest if too many
+            const items = feed.querySelectorAll('.activity-item');
+            if (items.length > 10) {
+                items[items.length - 1].remove();
+            }
+        }
+
+        // Update online count
+        function updateOnlineCount() {
+            const count = document.getElementById('onlineCount');
+            const current = parseInt(count.textContent);
+            const change = Math.floor(Math.random() * 5) - 2;
+            count.textContent = Math.max(70, Math.min(120, current + change));
+        }
+
+        // Open purchase modal
+        function openPurchaseModal(contractId) {
+            const contract = contracts.find(c => c.id === contractId);
+            const modal = document.getElementById('purchaseModal');
+            const details = document.getElementById('confirmationDetails');
+
+            details.innerHTML = `
+                <div class="confirm-item">
+                    <span class="confirm-label">Contract ID</span>
+                    <span class="confirm-value">#${contract.id}</span>
+                </div>
+                <div class="confirm-item">
+                    <span class="confirm-label">Hashrate</span>
+                    <span class="confirm-value">${contract.hashrate} TH/s</span>
+                </div>
+                <div class="confirm-item">
+                    <span class="confirm-label">Days Remaining</span>
+                    <span class="confirm-value">${contract.daysLeft} days</span>
+                </div>
+                <div class="confirm-item">
+                    <span class="confirm-label">Daily Income</span>
+                    <span class="confirm-value">${contract.dailyIncome} BTC</span>
+                </div>
+                <div class="confirm-item">
+                    <span class="confirm-label">Expected ROI</span>
+                    <span class="confirm-value" style="color: #00ff88">${contract.roi}% annually</span>
+                </div>
+                <div class="confirm-item" style="padding-top: 15px; border-top: 2px solid rgba(255,255,255,0.2); margin-top: 10px;">
+                    <span class="confirm-label">Original Price</span>
+                    <span class="confirm-value" style="text-decoration: line-through; color: #8891aa">$${contract.originalPrice.toLocaleString()}</span>
+                </div>
+                <div class="confirm-item">
+                    <span class="confirm-label">Your Price</span>
+                    <span class="confirm-value" style="color: #00ff88; font-size: 24px">$${contract.price.toLocaleString()}</span>
+                </div>
+                <div class="confirm-item">
+                    <span class="confirm-label">You Save</span>
+                    <span class="confirm-value" style="color: #ff3366; font-size: 18px">-${contract.discount}% ($${(contract.originalPrice - contract.price).toLocaleString()})</span>
+                </div>
+            `;
+
+            modal.classList.add('active');
+            modal.dataset.contractId = contractId;
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('purchaseModal').classList.remove('active');
+        }
+
+        // Complete purchase
+        function completePurchase() {
+            const modal = document.getElementById('purchaseModal');
+            const contractId = modal.dataset.contractId;
+            
+            // Create confetti
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = '-10px';
+                    confetti.style.background = ['#00ff88', '#00d4ff', '#ff3366', '#ffd700'][Math.floor(Math.random() * 4)];
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 30);
+            }
+
+            closeModal();
+
+            // Show success message
+            setTimeout(() => {
+                alert(`🎉 Success! Contract #${contractId} is now active in your account.\n\n✓ Mining started immediately\n✓ First payout in 24 hours\n✓ Check your dashboard for details`);
+            }, 500);
+        }
+
+        // Apply filter
+        function applyFilter(type) {
+            const buttons = document.querySelectorAll('.quick-filter-btn');
+            buttons.forEach(btn => {
+                if (btn.textContent.toLowerCase().includes(type)) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        // Add to watchlist
+        function addToWatchlist(contractId) {
+            alert(`Contract #${contractId} added to your watchlist!\n\n✓ You'll receive alerts for price changes\n✓ View all watchlist items in your dashboard`);
+        }
+
+        // Initialize
+        loadTheme();
+        initTicker();
+        renderContracts();
+        renderActivity();
+
+        // Live updates
+        setInterval(addLiveActivity, 8000);
+        setInterval(updateOnlineCount, 5000);
+    </script>
+</body>
+</html>

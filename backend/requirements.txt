@@ -1,0 +1,16 @@
+Flask==3.0.0
+Flask-CORS==4.0.0
+Flask-SQLAlchemy==3.1.1
+Flask-Migrate==4.0.5
+python-dotenv==1.0.0
+requests==2.31.0
+psycopg2-binary==2.9.9
+redis==5.0.1
+celery==5.3.4
+pytonlib==0.0.48
+tonsdk==1.0.13
+bitcoin==1.1.42
+
+# For production
+gunicorn==21.2.0
+gevent==23.9.1
